@@ -1,0 +1,5 @@
+name,type,from_bus,to_bus,r_pu,x_pu
+BUS 08-BUS 07-i_1,Transformer2W,8,7,0.0,0.17615
+BUS 04-BUS 07-i_1,TapTransformer,4,7,0.0,0.20911999999999997
+BUS 04-BUS 09-i_1,TapTransformer,4,9,0.0,0.55618
+BUS 05-BUS 06-i_1,TapTransformer,5,6,0.0,0.25202

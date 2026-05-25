@@ -1,0 +1,12 @@
+name,type,bus,P_pu,Q_pu
+load101,StandardLoad,10,0.09,0.057999999999999996
+load131,StandardLoad,13,0.135,0.057999999999999996
+load61,StandardLoad,6,0.11199999999999999,0.075
+load141,StandardLoad,14,0.149,0.05
+load31,StandardLoad,3,0.9420000000000001,0.19
+load21,StandardLoad,2,0.217,0.127
+load121,StandardLoad,12,0.061,0.016
+load111,StandardLoad,11,0.035,0.018000000000000002
+load51,StandardLoad,5,0.076,0.016
+load41,StandardLoad,4,0.478,0.0
+load91,StandardLoad,9,0.295,0.166

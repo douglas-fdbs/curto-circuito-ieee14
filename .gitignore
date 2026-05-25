@@ -1,0 +1,20 @@
+# --- Configuração local de ferramentas ---
+.claude/
+
+# --- Logs de instalação/execução ---
+*.log
+
+# --- Sistema operacional ---
+.DS_Store
+Thumbs.db
+*~
+
+# --- Editores ---
+.vscode/
+.idea/
+
+# --- Julia (artefatos temporários) ---
+# Obs.: Project.toml e Manifest.toml SÃO versionados (reprodutibilidade do ambiente).
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
