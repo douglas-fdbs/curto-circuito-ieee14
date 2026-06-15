@@ -69,7 +69,8 @@ O primeiro carregamento dos pacotes leva ~1–2 min (pré-compilação).
 
 ```
 TRABALHO_FINAL/
-├── DESENVOLVIMENTO.md                 ← este documento (o quê e por quê)
+├── README.md                          ← este documento (o quê e por quê)
+├── COMPARACAO_ANAFAS.md               ← metodologia da comparação Ybus×PSD×ANAFAS
 ├── julia/
 │   ├── Project.toml / Manifest.toml   ← ambiente isolado
 │   ├── src/SCUtils.jl                 ← módulo utilitário (Zbus, fluxo, cenários)
@@ -79,10 +80,14 @@ TRABALHO_FINAL/
 │       ├── 03_shortcircuit_static.jl  ← curto franco via Zbus
 │       ├── 04_dynamic_simulation.jl   ← curto dinâmico (PSD.jl)
 │       ├── 05_scenarios.jl            ← cenários de carga/geração
-│       └── 06_solar_pv.jl             ← impacto da geração solar FV
+│       ├── 06_solar_pv.jl             ← impacto da geração solar FV
+│       └── 07_export_latex.jl         ← exporta matrizes/tabelas LaTeX p/ o artigo
 ├── data/
 │   ├── results/                       ← CSVs com todos os resultados
-│   └── figures/                       ← figuras (PNG)
+│   ├── figures/                       ← figuras (PNG)
+│   └── headquarters/                  ← artefatos formatados p/ o artigo
+│       ├── latex/                     ← matrizes e tabelas em LaTeX (\input no Overleaf)
+│       └── txt/                       ← mesmas matrizes em ASCII (visual)
 ├── others/
 │   └── GUIA_JULIA.md                  ← tutorial didático da linguagem Julia
 │                                         (para quem nunca usou Julia)
@@ -92,6 +97,9 @@ TRABALHO_FINAL/
 > 📘 **Quem não conhece Julia** deve ler antes o
 > [others/GUIA_JULIA.md](others/GUIA_JULIA.md): um tutorial da linguagem do zero,
 > explicando os scripts deste projeto linha a linha.
+>
+> 🔬 **Comparação com o ANAFAS** (itens 3 e 5): a metodologia, as premissas e os
+> artefatos LaTeX estão em [COMPARACAO_ANAFAS.md](COMPARACAO_ANAFAS.md).
 
 ---
 
@@ -255,26 +263,38 @@ inversor (IBR).
 
 ## 7. Comparação consolidada das abordagens (item 5)
 
-Corrente de curto-circuito trifásico na barra 7 (resumo):
+Corrente de curto-circuito trifásico na barra 7. O cálculo estático é apresentado
+em **quatro variantes** (tensão pré-falta *flat* 1,0 pu × do fluxo; com × sem
+cargas), para casar com qualquer configuração do ANAFAS — ver
+[COMPARACAO_ANAFAS.md](COMPARACAO_ANAFAS.md).
 
-| Abordagem | Corrente de falta | Observação |
-|-----------|-------------------|-----------|
-| **Estático Zbus — só geradores** | **27,62 kA** | método clássico, falta franca |
-| **Estático Zbus — geradores + cargas** | 28,87 kA | cargas como impedância constante |
-| **Dinâmico PSD.jl — falta ~franca** | 23,65 kA | modelo completo das máquinas + AVR |
-| **Dinâmico PSD.jl — falta severa eliminável** | 23,33 kA | — |
-| **ANAFAS** | *(a obter)* | item 3, à parte |
+| Abordagem | Corrente de falta | \(\varepsilon\) vs ANAFAS | Observação |
+|-----------|-------------------|---------------------------|-----------|
+| **ANAFAS** (referência) | **26,88 kA** (6,426 pu) | — | ANAFAS 8.1, curto trifásico na barra 7 |
+| Zbus — *flat*, sem carga | 26,46 kA (6,324 pu) | **−1,6 %** | **melhor concordância** (ANAFAS clássico) |
+| Zbus — *flat*, carga Z | 27,73 kA | +3,1 % | cargas como impedância constante |
+| Zbus — fluxo, sem carga | 27,58 kA | +2,6 % | tensão pré-falta do fluxo de potência |
+| Zbus — fluxo, carga Z | 28,84 kA | +7,3 % | mais realista |
+| Dinâmico PSD.jl — falta ~franca | 23,65 kA | −12,0 % | corrente já amortecida (não é o pico) |
+| Dinâmico PSD.jl — falta severa eliminável | 23,33 kA | — | — |
 
-**Por que diferem o estático e o dinâmico?** O método Zbus usa as reatâncias
-**subtransitórias** e superposição linear em torno do ponto pré-falta; o PSD.jl
-resolve o modelo dinâmico completo (incluindo regulação de tensão/AVR e a evolução
-dos fluxos), de modo que a corrente "estabilizada" durante a falta já incorpora a
-resposta das máquinas, tipicamente **menor** que o pico subtransitório do cálculo
-clássico. A comparação com o ANAFAS (que também usa um modelo de curto baseado em
-impedâncias) tende a ficar próxima da abordagem estática.
+**Validação (ANAFAS × Zbus *flat/sem carga*):** corrente **−1,6 %**, tensões nas
+barras **0–4 %** (médio 2,1 %), contribuições dos ramos **≤ 4,1 %**, e SCC
+praticamente idêntico (632,3 vs 632,4 MVA). A soma fasorial das contribuições fecha
+com \(I_f\) (KCL) em ambas as ferramentas. Tabelas prontas em
+[data/headquarters/latex/](data/headquarters/latex/) (`tab_corrente_falta`,
+`tab_tensoes_falta`, `tab_contribuicoes`), com erros calculados.
 
-> **A fazer:** quando os resultados do ANAFAS estiverem disponíveis, montar uma
-> tabela/figura única com as três abordagens lado a lado e fechar a discussão.
+Em todas as variantes a impedância de Thévenin sem carga é a mesma (\|Z₇₇\|=0,158),
+pois **independe** da tensão pré-falta; a corrente muda só pela tensão no ponto. As
+pequenas diferenças residuais vêm das premissas do ANAFAS (tensão pré-falta do
+`.pwf` ≈ 0,984 e inclusão de cargas/shunts), que quase se cancelam.
+
+**Por que o dinâmico (PSD.jl) fica abaixo?** O método Zbus e o ANAFAS dão o **pico
+subtransitório** (superposição com \(X''_d\)); o PSD.jl integra o modelo dinâmico
+completo (com AVR), e a corrente "estabilizada" durante a falta já é amortecida —
+por isso **menor** (−12 %). É uma diferença **física esperada**, não erro: A ≈ C
+(mesma família) e B < A, com B fornecendo em troca a resposta no tempo.
 
 ---
 

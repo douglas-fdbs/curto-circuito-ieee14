@@ -1,0 +1,17 @@
+% ======================================================================
+% Corrente de curto trifásico na barra 7. ANAFAS = referência do erro ε.
+% Menor erro: variante flat/sem carga (clássica, comparável ao ANAFAS clássico).
+% Gerado automaticamente por 07_export_latex.jl — não editar à mão.
+% ======================================================================
+\begin{tabular}{lcccc}
+\toprule
+Abordagem & $|I_f|$ [pu] & $|I_f|$ [kA] & SCC [MVA] & $\varepsilon$ vs ANAFAS \\
+\midrule
+Zbus (flat, sem carga) & 6.324 & 26.46 & 632.4 & -1.6\% \\
+Zbus (flat, carga Z) & 6.628 & 27.73 & 662.8 & +3.1\% \\
+Zbus (fluxo, sem carga) & 6.593 & 27.58 & 687.4 & +2.6\% \\
+Zbus (fluxo, carga Z) & 6.895 & 28.84 & 718.8 & +7.3\% \\
+PSD.jl (dinâmico) & 5.653 & 23.65 & -- & -12.0\% \\
+\textbf{ANAFAS} (ref.) & 6.426 & 26.88 & 632.3 & -- \\
+\bottomrule
+\end{tabular}
