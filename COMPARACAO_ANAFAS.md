@@ -214,15 +214,25 @@ Erro percentual com o ANAFAS como referência (convenção do artigo IFG):
 | Grandeza | ANAFAS | Zbus (flat) | \(\varepsilon\) |
 |----------|--------|-------------|-----------------|
 | Corrente \(I_f\) | 6,426 pu (26,88 kA) | 6,324 pu (26,46 kA) | **−1,6 %** |
-| SCC | 632,3 MVA | 632,4 MVA | ~0 % |
+| SCC | 636,2 MVA | 632,4 MVA | ~0,6 % |
 | Tensões nas barras | — | — | 0–4 % (médio 2,1 %) |
 | Contribuições (4/8/9→7) | 2,915 / 1,590 / 1,936 | 3,014 / 1,524 / 1,905 | ≤ 4,1 % |
 
 A concordância **A ≈ C** confirma-se (erro ≲ 2 %). A variante *flat/sem carga* é a
 mais fiel (o ANAFAS usou tensão pré-falta ≈ flat). As diferenças residuais (1–4 %)
-vêm das premissas: tensão pré-falta do `.pwf` (≈0,984) e inclusão de cargas/shunts
-no ANAFAS — efeitos que quase se cancelam. O dinâmico (PSD.jl) fica em −12 % por dar
-a corrente **amortecida**, não o pico subtransitório (diferença física esperada).
+vêm das premissas: tensão pré-falta (barra 7 = 0,990 pu, do relatório de fluxo) e
+inclusão de cargas/shunts no ANAFAS — efeitos que quase se cancelam. O dinâmico
+(PSD.jl) fica em −12 % por dar a corrente **amortecida**, não o pico subtransitório
+(diferença física esperada).
+
+> **Rastreabilidade (reconciliação 2026-06-17):** todos os valores do ANAFAS usados
+> no script 07 foram conferidos 1:1 com os relatórios salvos. `If`, tensões e
+> contribuições vêm de [Relatorio_Anafas.txt](others/referencia_anafas/Relatorio_Anafas.txt)
+> (relatório de curto). A tensão pré-falta da barra 7 vem de
+> [REL14BARRAS_CONT.TXT](others/referencia_anafas/REL14BARRAS_CONT.TXT) (relatório de
+> fluxo) = **0,990 pu** — corrigida de um valor anterior (0,984) que não tinha fonte
+> no repositório. O SCC do ANAFAS passou de 632,3 → **636,2 MVA**; mesmo com as fontes
+> agora independentes, a coincidência com o SCC do código (632,4 MVA) permanece < 1 %.
 
 ---
 

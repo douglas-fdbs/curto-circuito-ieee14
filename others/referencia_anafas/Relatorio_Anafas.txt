@@ -1,0 +1,145 @@
+                CEPEL - Centro de Pesquisas de Energia Elétrica
+        ANAFAS - Programa de Análise de Faltas Simultâneas - 8.1-Ago25    P.   1
+ 
+ ****   Sistema teste de 14 barras para analise de contingencias  ****
+
+                    DESCRICAO DA FALTA COMPOSTA DE  1 DEFEITO 
+
+ 1) Curto trifasico na barra     7 (BARRA-7     ) .                             
+
+             T E N S O E S   E   C O R R E N T E S   D E   C U R T O
+
+                             Barra     7 (BARRA-7     )
+                  TENSAO(pu)                           CORRENTE(pu ) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A   6.426  -96.2   Z   0.000    0.0
+       B 0.000    0.0   P 0.000    0.0     B  -6.426  -36.2   P   6.426  -96.2
+       C 0.000    0.0   N 0.000    0.0     C  -6.426 -156.2   N   0.000    0.0
+
+      T E N S O E S   E   C O R R E N T E S   D E   C O N T R I B U I C A O
+
+     Bar.    7 (BARRA-7     ) TEN.(pu) 
+          mod.   ang.      mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0
+       B 0.000    0.0   P 0.000    0.0
+       C 0.000    0.0   N 0.000    0.0
+
+     Bar.    4 (BARRA-4     ) TEN.(pu)   Cir.  1T(         ) CORR.(pu ) p/    7 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.596   -3.8   Z 0.000    0.0     A   2.915  -93.8   Z   0.000    0.0
+       B 0.596 -123.8   P 0.596   -3.8     B  -2.915  -33.8   P   2.915  -93.8
+       C 0.596  116.2   N 0.000    0.0     C  -2.915 -153.8   N   0.000    0.0
+
+     Bar.    8 (BARRA-8     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    7   Impedância de     7 para     8 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.280  -15.0   Z 0.000    0.0     A   1.590 -105.0   Z   0.000    0.0    AB    0.00   0.00  AN    0.00   0.00
+       B 0.280 -135.0   P 0.280  -15.0     B  -1.590  -45.0   P   1.590 -105.0    BC    0.00   0.00  BN    0.00   0.00
+       C 0.280  105.0   N 0.000    0.0     C  -1.590 -165.0   N   0.000    0.0    CA    0.00   0.00  CN    0.00   0.00
+
+     Bar.    9 (BARRA-9     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    7   Impedância de     7 para     9 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.213   -4.4   Z 0.000    0.0     A   1.936  -94.4   Z   0.000    0.0    AB    0.00   0.00  AN    0.00   0.00
+       B 0.213 -124.4   P 0.213   -4.4     B  -1.936  -34.4   P   1.936  -94.4    BC    0.00   0.00  BN    0.00   0.00
+       C 0.213  115.6   N 0.000    0.0     C  -1.936 -154.4   N   0.000    0.0    CA    0.00   0.00  CN    0.00   0.00
+
+     Bar.    4 (BARRA-4     ) TEN.(pu) 
+          mod.   ang.      mod.   ang. 
+       A 0.596   -3.8   Z 0.000    0.0
+       B 0.596 -123.8   P 0.596   -3.8
+       C 0.596  116.2   N 0.000    0.0
+
+     Bar.    2 (BARRA-2     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    4   Impedância de     4 para     2 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.840   -3.2   Z 0.000    0.0     A   1.325  -73.7   Z   0.000    0.0    AB    0.00-110.15  AN    0.00-110.15
+       B 0.840 -123.2   P 0.840   -3.2     B  -1.325  -13.7   P   1.325  -73.7    BC    0.00-110.15  BN    0.00-110.15
+       C 0.840  116.8   N 0.000    0.0     C  -1.325 -133.7   N   0.000    0.0    CA    0.00-110.15  CN    0.00-110.15
+
+     Bar.    3 (BARRA-3     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    4   Impedância de     4 para     3 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.813  -13.9   Z 0.000    0.0     A   1.365 -107.3   Z   0.000    0.0    AB    0.00 -76.47  AN    0.00 -76.47
+       B 0.813 -133.9   P 0.813  -13.9     B  -1.365  -47.3   P   1.365 -107.3    BC    0.00 -76.47  BN    0.00 -76.47
+       C 0.813  106.1   N 0.000    0.0     C  -1.365 -167.3   N   0.000    0.0    CA    0.00 -76.47  CN    0.00 -76.47
+
+     Bar.    5 (BARRA-5     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    4   Impedância de     4 para     5 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.660   -3.8   Z 0.000    0.0     A   1.446  -75.8   Z   0.000    0.0    AB    0.00-108.04  AN    0.00-108.04
+       B 0.660 -123.8   P 0.660   -3.8     B  -1.446  -15.8   P   1.446  -75.8    BC    0.00-108.04  BN    0.00-108.04
+       C 0.660  116.2   N 0.000    0.0     C  -1.446 -135.8   N   0.000    0.0    CA    0.00-108.04  CN    0.00-108.04
+
+     Bar.    7 (BARRA-7     ) TEN.(pu)   Cir.  1T(         ) CORR.(pu ) p/    4 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A  -2.980  -93.8   Z   0.000    0.0
+       B 0.000    0.0   P 0.000    0.0     B   2.980  -33.8   P  -2.980  -93.8
+       C 0.000    0.0   N 0.000    0.0     C   2.980 -153.8   N   0.000    0.0
+
+     Bar.    9 (BARRA-9     ) TEN.(pu)   Cir.  1T(         ) CORR.(pu ) p/    4 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.213   -4.4   Z 0.000    0.0     A  -0.746  -93.5   Z   0.000    0.0
+       B 0.213 -124.4   P 0.213   -4.4     B   0.746  -33.5   P  -0.746  -93.5
+       C 0.213  115.6   N 0.000    0.0     C   0.746 -153.5   N   0.000    0.0
+
+     Bar.    0 (-REFERENCIA-) TEN.(pu)   Cir.  1C(         ) CORR.(pu ) p/    4 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A   0.313 -179.1   Z   0.000    0.0
+       B 0.000    0.0   P 0.000    0.0     B  -0.313 -119.1   P   0.313 -179.1
+       C 0.000    0.0   N 0.000    0.0     C   0.313  -59.1   N   0.000    0.0
+
+     Bar.    8 (BARRA-8     ) TEN.(pu) 
+          mod.   ang.      mod.   ang. 
+       A 0.280  -15.0   Z 0.000    0.0
+       B 0.280 -135.0   P 0.280  -15.0
+       C 0.280  105.0   N 0.000    0.0
+
+     Bar.    7 (BARRA-7     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    8   Impedância de     8 para     7 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A  -1.590 -105.0   Z   0.000    0.0    AB    0.00  90.00  AN    0.00  90.00
+       B 0.000    0.0   P 0.000    0.0     B   1.590  -45.0   P  -1.590 -105.0    BC    0.00  90.00  BN    0.00  90.00
+       C 0.000    0.0   N 0.000    0.0     C   1.590 -165.0   N   0.000    0.0    CA    0.00  90.00  CN    0.00  90.00
+
+     Bar.    0 (-BARRA_INT.-) TEN.(pu)   Cir.  1G(         ) CORR.(pu ) p/    8 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 1.000  -15.0   Z 0.000    0.0     A   1.500 -105.0   Z   0.000    0.0
+       B 1.000 -135.0   P 1.000  -15.0     B  -1.500  -45.0   P   1.500 -105.0
+       C 1.000  105.0   N 0.000    0.0     C  -1.500 -165.0   N   0.000    0.0
+
+     Bar.    9 (BARRA-9     ) TEN.(pu) 
+          mod.   ang.      mod.   ang. 
+       A 0.213   -4.4   Z 0.000    0.0
+       B 0.213 -124.4   P 0.213   -4.4
+       C 0.213  115.6   N 0.000    0.0
+
+     Bar.    4 (BARRA-4     ) TEN.(pu)   Cir.  1T(         ) CORR.(pu ) p/    9 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.596   -3.8   Z 0.000    0.0     A   0.723  -93.5   Z   0.000    0.0
+       B 0.596 -123.8   P 0.596   -3.8     B  -0.723  -33.5   P   0.723  -93.5
+       C 0.596  116.2   N 0.000    0.0     C  -0.723 -153.5   N   0.000    0.0
+
+     Bar.    7 (BARRA-7     ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    9   Impedância de     9 para     7 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A  -1.936  -94.4   Z   0.000    0.0    AB    0.00  90.00  AN    0.00  90.00
+       B 0.000    0.0   P 0.000    0.0     B   1.936  -34.4   P  -1.936  -94.4    BC    0.00  90.00  BN    0.00  90.00
+       C 0.000    0.0   N 0.000    0.0     C   1.936 -154.4   N   0.000    0.0    CA    0.00  90.00  CN    0.00  90.00
+
+     Bar.   10 (BARRA-10    ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    9   Impedância de     9 para    10 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.279   -7.8   Z 0.000    0.0     A   0.750  -87.9   Z   0.000    0.0    AB    0.00 -96.51  AN    0.00 -96.51
+       B 0.279 -127.8   P 0.279   -7.8     B  -0.750  -27.9   P   0.750  -87.9    BC    0.00 -96.51  BN    0.00 -96.51
+       C 0.279  112.2   N 0.000    0.0     C  -0.750 -147.9   N   0.000    0.0    CA    0.00 -96.51  CN    0.00 -96.51
+
+     Bar.   14 (BARRA-14    ) TEN.(pu)   Cir.  1L(         ) CORR.(pu ) p/    9   Impedância de     9 para    14 (ohms) 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.347  -12.3   Z 0.000    0.0     A   0.466  -89.3   Z   0.000    0.0    AB    0.00 -95.08  AN    0.00 -95.08
+       B 0.347 -132.3   P 0.347  -12.3     B  -0.466  -29.3   P   0.466  -89.3    BC    0.00 -95.08  BN    0.00 -95.08
+       C 0.347  107.7   N 0.000    0.0     C  -0.466 -149.3   N   0.000    0.0    CA    0.00 -95.08  CN    0.00 -95.08
+
+     Bar.    0 (-REFERENCIA-) TEN.(pu)   Cir.  1H(         ) CORR.(pu ) p/    9 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A   0.040  -94.4   Z   0.000    0.0
+       B 0.000    0.0   P 0.000    0.0     B  -0.040  -34.4   P   0.040  -94.4
+       C 0.000    0.0   N 0.000    0.0     C  -0.040 -154.4   N   0.000    0.0
+
+     Bar.    0 (-REFERENCIA-) TEN.(pu)   Cir.  1C(         ) CORR.(pu ) p/    9 
+          mod.   ang.      mod.   ang.          mod.   ang.        mod.   ang. 
+       A 0.000    0.0   Z 0.000    0.0     A  -0.075  -33.8   Z   0.000    0.0
+       B 0.000    0.0   P 0.000    0.0     B  -0.075 -153.8   P  -0.075  -33.8
+       C 0.000    0.0   N 0.000    0.0     C   0.075  -93.8   N   0.000    0.0

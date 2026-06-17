@@ -370,10 +370,12 @@ println("\n--- Tabelas comparativas (LaTeX) ---")
 psid_If_kA = 23.65   # Caso A (falta quase franca, permanente) — ver 04_summary.csv
 
 #--- Dados do relatório ANAFAS (curto trifásico franco na barra 7) — 2026-06-08 ---
-# ANAFAS 8.1; tensão pré-falta do .pwf (≈0,984 na barra 7); cargas e shunt incluídos.
+# Fonte: others/referencia_anafas/Relatorio_Anafas.txt (ANAFAS 8.1, curto trifásico).
+# If, tensões e contribuições conferidos 1:1 com o relatório de curto.
+# Vpre7 vem do relatório de FLUXO (REL14BARRAS_CONT.TXT): barra 7 = 0,990 pré-falta.
 # Tensões: barras 1,6,11,12,13 NÃO constam no relatório de estudo individual.
 const ANAFAS_If_pu = 6.426
-const ANAFAS_Vpre7 = 0.984
+const ANAFAS_Vpre7 = 0.990
 const ANAFAS_V = Dict(2=>0.840, 3=>0.813, 4=>0.596, 5=>0.660, 7=>0.000,
                       8=>0.280, 9=>0.213, 10=>0.279, 14=>0.347)   # módulo pu
 const ANAFAS_CONTRIB = Dict(4=>2.915, 8=>1.590, 9=>1.936)        # módulo pu p/ barra 7
