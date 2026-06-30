@@ -93,12 +93,16 @@ CSV.write(joinpath(RESULTS_DIR, "05_scenarios_summary.csv"), results)
 #------------------------------------------------------------------------------
 # Gráfico 1: corrente de falta por cenário (barras)
 #------------------------------------------------------------------------------
+# Eixo Y ampliado (zoom) para evidenciar as pequenas diferenças entre cenários
+# (variam ~4%, de 26,8 a 27,9 kA). O título avisa que o eixo NÃO começa em zero.
+ymin = floor(minimum(results.If_kA) - 0.5)
+ymax = ceil(maximum(results.If_kA) + 0.5)
 p1 = bar(results.cenario, results.If_kA;
          ylabel = "Corrente de falta [kA]", legend = false,
-         title = "Corrente de curto na barra $FAULT_BUS por cenário",
-         xrotation = 20, lw = 0, fillcolor = :steelblue)
+         title = "Corrente de curto na barra $FAULT_BUS por cenário (eixo ampliado)",
+         xrotation = 20, lw = 0, fillcolor = :steelblue, ylims = (ymin, ymax))
 for (i, v) in enumerate(results.If_kA)
-    annotate!(p1, i, v + 0.5, text(@sprintf("%.1f", v), 8))
+    annotate!(p1, i, v + 0.12, text(@sprintf("%.2f", v), 8))
 end
 savefig(p1, joinpath(FIG_DIR, "05_corrente_por_cenario.png"))
 

@@ -130,6 +130,7 @@ function run_fault(sys)
     gen_names = sort([get_name(g) for g in get_components(ThermalStandard, sys)
                       if get_dynamic_injector(g) !== nothing])
     omega = Dict(g => get_state_series(res, (g, :ω)) for g in gen_names)
+    pe = Dict(g => get_activepower_series(res, g) for g in gen_names)  # potência elétrica
 
     t, vf = volt[FAULT_BUS]
     iflt = [(t[k] >= T_FAULT) ? vf[k] * abs(Yf) : 0.0 for k in eachindex(t)]
@@ -138,7 +139,7 @@ function run_fault(sys)
                                    if get_number(b) == FAULT_BUS))
     Ibase = get_base_power(sys) / (sqrt(3) * Vbase)
 
-    return (; status, volt, omega, gen_names, t, iflt, Ibase, res)
+    return (; status, volt, omega, pe, gen_names, t, iflt, Ibase, res)
 end
 
 # Janela breve logo após a falta (pós-subtransitório, antes da degradação do
@@ -220,6 +221,25 @@ plot!(p3, pv.omega[REF_GEN]...; label = "com FV", lw = 2, ls = :dash)
 vline!(p3, [T_FAULT]; ls = :dot, color = :gray, label = "falta")
 savefig(p3, joinpath(FIG_DIR, "06_velocidade_ref.png"))
 
+# (3b) Potência elétrica do gerador de referência — EXPLICA a deriva de velocidade.
+# Pela equação de oscilação, dω/dt ∝ (P_mec − P_elét). Se P_elét > P_mec durante a
+# falta, a máquina DESACELERA (ω cai). P_mec ≈ P_elét pré-falta (regime permanente).
+# NOTA: com a FV, o gen-1 (slack) gera MENOS em regime (a FV desloca ~60 MW), então
+# sua P_mec é menor; por isso cada caso é comparado à SUA própria P_mec.
+pm_base = base.pe[REF_GEN][2][1]    # P_mec sem FV
+pm_pv   = pv.pe[REF_GEN][2][1]      # P_mec com FV (menor: FV desloca geração do slack)
+p5 = plot(; xlabel = "tempo [s]", ylabel = "P elétrica [pu, 100 MVA]",
+          title = "Potência elétrica do gerador $REF_GEN durante a falta", legend = :right,
+          xlims = (0.8, TSPAN[2]))
+plot!(p5, base.pe[REF_GEN]...; label = "P_elét sem FV", lw = 2, color = :steelblue)
+plot!(p5, pv.pe[REF_GEN]...; label = "P_elét com FV", lw = 2, ls = :dash, color = :orange)
+hline!(p5, [pm_base]; ls = :dot, color = :steelblue,
+       label = "P_mec sem FV ≈ $(round(pm_base, digits = 2))")
+hline!(p5, [pm_pv]; ls = :dot, color = :orange,
+       label = "P_mec com FV ≈ $(round(pm_pv, digits = 2))")
+vline!(p5, [T_FAULT]; ls = :dot, color = :gray, label = "falta")
+savefig(p5, joinpath(FIG_DIR, "06_potencia_ref.png"))
+
 # (4) Resposta da usina FV (P, Q, |I|)
 p4 = plot(; xlabel = "tempo [s]", ylabel = "FV [pu, base $(round(Int,PV_S)) MVA]",
           title = "Resposta da usina FV durante o curto", legend = :right,
@@ -250,6 +270,6 @@ df_sum = DataFrame(
 )
 CSV.write(joinpath(RESULTS_DIR, "06_summary.csv"), df_sum)
 
-println("\n Figuras: 06_tensao_bus7, 06_tensao_pv, 06_velocidade_ref, 06_resposta_fv")
+println("\n Figuras: 06_tensao_bus7, 06_tensao_pv, 06_velocidade_ref, 06_potencia_ref, 06_resposta_fv")
 println(" Séries:  06_pv_comparison.csv, 06_pv_response.csv, 06_summary.csv")
 println("="^70)

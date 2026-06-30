@@ -252,8 +252,16 @@ inversor (IBR).
 **Saídas:** figuras [06_tensao_bus7](data/figures/06_tensao_bus7.png),
 [06_tensao_pv](data/figures/06_tensao_pv.png),
 [06_velocidade_ref](data/figures/06_velocidade_ref.png),
+[06_potencia_ref](data/figures/06_potencia_ref.png),
 [06_resposta_fv](data/figures/06_resposta_fv.png); séries `06_*.csv`.
 **Atende:** segunda parte do item 6.
+
+> Sob a falta **permanente** (não eliminada, por projeto), o gerador de referência
+> **desacelera**: a [potência elétrica](data/figures/06_potencia_ref.png) que ele
+> entrega supera a mecânica (P_elét > P_mec), pois alimenta a falta e as perdas I²R
+> da rede de 69 kV. Com a FV, o gen-1 gera menos em regime (a FV desloca ~60 MW:
+> P_mec cai de 1,93 → 1,29 pu), mas o sinal de desaceleração se mantém — a FV
+> praticamente **não altera a inércia** do sistema (efeito de ordem de ~0,1 %).
 
 > **Nota numérica:** o inversor *grid-following* não tolera a eliminação brusca da
 > falta nem afundamentos muito profundos (o PLL perde sincronismo). Por isso a
