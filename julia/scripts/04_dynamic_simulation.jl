@@ -7,8 +7,10 @@
 
  Dois casos são simulados:
    CASO A - Falta quase franca (Z=1e-3 pu), PERMANENTE, janela curta.
-            Captura a corrente de falta e os afundamentos de tensão para
-            comparação direta com o método estático Zbus (item 2/3).
+            Mede a corrente de falta em DOIS instantes: o pico SUBTRANSITÓRIO
+            (1º ciclo após a falta — comparável ao Zbus/ANAFAS, que usam X"d) e
+            a corrente AMORTECIDA do regime transitório (a corrente decai de
+            X"d->X'd com o tempo). Captura também os afundamentos de tensão.
    CASO B - Falta severa (Z=5e-2 pu) ELIMINADA em 100 ms.
             Mostra a resposta transitória completa (ângulos e velocidades dos
             rotores, recuperação das tensões) - estabilidade transitória.
@@ -93,21 +95,28 @@ function simulate_fault(; z_fault, t_clear, tspan, dtmax = 0.01, fault_bus = FAU
     # Corrente de falta: I_f(t) = V_f(t) * |Y_falta|  (KCL no nó de falta)
     t, vf = volt[fault_bus]
     t_end_fault = t_clear === nothing ? tspan[2] : t_clear
-     if_mag = [(T_FAULT <= t[k] < t_end_fault) ? vf[k] * abs(Yf_shunt) : 0.0
+    if_mag = [(T_FAULT <= t[k] < t_end_fault) ? vf[k] * abs(Yf_shunt) : 0.0
               for k in eachindex(t)]
-    settled = findall(k -> (T_FAULT + 0.03) <= t[k] < t_end_fault, eachindex(t))
-    if_settled = isempty(settled) ? 0.0 : mean(if_mag[settled])
+    # Pico SUBTRANSITÓRIO: média do 1º ciclo após a falta (~16 ms). Pula a amostra do
+    # instante EXATO do chaveamento (V_pré*Y_falta = lixo numérico). É ESTE o valor
+    # comparável ao método estático Zbus e ao ANAFAS (ambos são subtransitórios).
+    subtr = findall(k -> (T_FAULT + 1e-4) <= t[k] <= (T_FAULT + 0.02), eachindex(t))
+    if_subtr = isempty(subtr) ? 0.0 : mean(if_mag[subtr])
+    # Corrente AMORTECIDA (regime transitório): janela tardia, longe da borda final.
+    # Mostra o decaimento subtransitório->transitório (X"d -> X'd) sob falta permanente.
+    settled = findall(k -> (T_FAULT + 0.30) <= t[k] <= (t_end_fault - 0.05), eachindex(t))
+    if_settled = isempty(settled) ? if_subtr : mean(if_mag[settled])
 
     Vbase_kV = get_base_voltage(first(b for b in get_components(ACBus, sys)
                                       if get_number(b) == fault_bus))
     Ibase_kA = get_base_power(sys) / (sqrt(3) * Vbase_kV)
 
-    # Tensões durante a falta (média na janela estabilizada) p/ comparação estática
-    v_during = Dict(b => (isempty(settled) ? NaN : mean(volt[b][2][settled]))
+    # Tensões durante a falta (média no 1º ciclo, subtransitório) p/ comparação estática
+    v_during = Dict(b => (isempty(subtr) ? NaN : mean(volt[b][2][subtr]))
                     for b in bus_order)
 
     return (; status, bus_order, volt, delta, omega, gen_names,
-            if_mag, if_settled, Ibase_kA, t_end_fault, v_during,
+            if_mag, if_subtr, if_settled, Ibase_kA, t_end_fault, v_during,
             vfmin = minimum(vf), Yf_abs = abs(Yf_shunt))
 end
 
@@ -117,11 +126,14 @@ end
 println("="^70)
 println(" CASO A - Falta quase franca permanente na barra ", FAULT_BUS, " (Z=1e-3 pu)")
 println("="^70)
-A = simulate_fault(; z_fault = 1e-3, t_clear = nothing, tspan = (0.0, 1.6))
+A = simulate_fault(; z_fault = 1e-3, t_clear = nothing, tspan = (0.0, 1.6), dtmax = 0.002)
 println("  Status                 : ", A.status)
 println("  V", FAULT_BUS, " mínima durante falta : ", round(A.vfmin, digits = 5), " pu")
-println("  |I_falta| estabilizada : ", round(A.if_settled, digits = 4), " pu = ",
-        round(A.if_settled * A.Ibase_kA, digits = 4), " kA")
+println("  |I_falta| subtransitória (1º ciclo)   : ", round(A.if_subtr, digits = 4),
+        " pu = ", round(A.if_subtr * A.Ibase_kA, digits = 4),
+        " kA  <- comparável ao Zbus/ANAFAS")
+println("  |I_falta| amortecida (regime transit.): ", round(A.if_settled, digits = 4),
+        " pu = ", round(A.if_settled * A.Ibase_kA, digits = 4), " kA")
 
 # Tabela: tensões durante a falta (dinâmico, Caso A) p/ comparação com estático
 df_vA = DataFrame(bus = A.bus_order,
@@ -143,8 +155,8 @@ println("="^70)
 B = simulate_fault(; z_fault = Z_FAULT_B, t_clear = T_CLEAR_B, tspan = (0.0, 15.0))
 println("  Status                 : ", B.status)
 println("  V", FAULT_BUS, " mínima durante falta : ", round(B.vfmin, digits = 5), " pu")
-println("  |I_falta| estabilizada : ", round(B.if_settled, digits = 4), " pu = ",
-        round(B.if_settled * B.Ibase_kA, digits = 4), " kA")
+println("  |I_falta| subtransitória : ", round(B.if_subtr, digits = 4), " pu = ",
+        round(B.if_subtr * B.Ibase_kA, digits = 4), " kA")
 
 #------------------------------------------------------------------------------
 # Gráficos do Caso B (resposta transitória)
@@ -180,15 +192,20 @@ end
 vline!(p3, [T_FAULT, T_CLEAR_B]; ls = :dash, color = :gray, label = "")
 savefig(p3, joinpath(FIG_DIR, "04b_velocidades.png"))
 
-# Corrente de falta (Caso A - falta profunda)
+# Corrente de falta (Caso A) — remove a amostra-lixo do instante do chaveamento
+# (V_pré*Y_falta) p/ o eixo autoescalar no pico subtransitório real; janela focada
+# no decaimento subtransitório->transitório, evitando a borda final da simulação.
 tA, _ = A.volt[FAULT_BUS]
-p4 = plot(tA, A.if_mag; xlabel = "tempo [s]", ylabel = "|I_falta| [pu]",
-          title = "Caso A: Corrente de curto na barra $FAULT_BUS",
-          label = "I_falta", lw = 2.0, legend = :topright,
-          xlims = (T_FAULT - 0.05, A.t_end_fault),
-          ylims = (0, max(1.0, 1.5 * A.if_settled)))
-hline!(p4, [A.if_settled]; ls = :dash, color = :red,
-       label = "estab. = $(round(A.if_settled, digits=2)) pu")
+if_plot = [x > 50 ? NaN : x for x in A.if_mag]
+p4 = plot(tA, if_plot; xlabel = "tempo [s]", ylabel = "|I_falta| [pu]",
+          title = "Caso A: Corrente de curto na barra $FAULT_BUS (decaimento subtransitório)",
+          label = "I_falta(t)", lw = 2.0, legend = :topright,
+          xlims = (T_FAULT - 0.03, T_FAULT + 0.5), ylims = (0, 1.2 * A.if_subtr))
+hline!(p4, [A.if_subtr]; ls = :dash, color = :red,
+       label = "subtransitório ≈ $(round(A.if_subtr, digits=2)) pu")
+hline!(p4, [A.if_settled]; ls = :dot, color = :gray,
+       label = "amortecida ≈ $(round(A.if_settled, digits=2)) pu")
+vline!(p4, [T_FAULT]; ls = :dash, color = :black, label = "falta")
 savefig(p4, joinpath(FIG_DIR, "04a_corrente_falta.png"))
 
 #------------------------------------------------------------------------------
@@ -213,8 +230,10 @@ df_sum = DataFrame(
     caso = ["A (franca, permanente)", "B (severa, eliminada)"],
     z_fault_pu = [1e-3, Z_FAULT_B],
     V7_min_pu = [A.vfmin, B.vfmin],
-    If_pu = [A.if_settled, B.if_settled],
-    If_kA = [A.if_settled * A.Ibase_kA, B.if_settled * B.Ibase_kA],
+    If_subtr_pu = [A.if_subtr, B.if_subtr],
+    If_subtr_kA = [A.if_subtr * A.Ibase_kA, B.if_subtr * B.Ibase_kA],
+    If_amort_pu = [A.if_settled, B.if_settled],
+    If_amort_kA = [A.if_settled * A.Ibase_kA, B.if_settled * B.Ibase_kA],
     status = [string(A.status), string(B.status)],
 )
 CSV.write(joinpath(RESULTS_DIR, "04_summary.csv"), df_sum)

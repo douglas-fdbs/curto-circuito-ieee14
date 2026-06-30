@@ -185,10 +185,12 @@ vizinhas afundam — barra 9 ≈ 0,20; barra 8 ≈ 0,32; barra 4 ≈ 0,62.
 
 - **Caso A — falta quase franca (Z=10⁻³ pu), permanente, janela curta (0–1,6 s):**
   captura a corrente de falta e os afundamentos, comparáveis ao método estático.
-  Resultado: V7 → 0,005 pu; **I_falta ≈ 23,65 kA**.
+  A corrente é medida em dois instantes: **pico subtransitório** (1º ciclo após a
+  falta, comparável ao Zbus/ANAFAS que usam X″d) = **27,71 kA**; e **amortecida**
+  (regime transitório, após o decaimento X″d→X′d) ≈ 23,1 kA. V7 → 0,005 pu.
 - **Caso B — falta severa (Z=5×10⁻² pu) eliminada em 100 ms:** mostra a resposta
   transitória completa (ângulos e velocidades dos rotores, recuperação das tensões).
-  Resultado: V7 → 0,27 pu; **I_falta ≈ 23,33 kA**.
+  Resultado: V7 → 0,27 pu; **I_falta subtransitória ≈ 25,11 kA**.
 
 **Saídas:** figuras [04a_corrente_falta](data/figures/04a_corrente_falta.png),
 [04b_tensoes](data/figures/04b_tensoes.png),
@@ -275,26 +277,29 @@ cargas), para casar com qualquer configuração do ANAFAS — ver
 | Zbus — *flat*, carga Z | 27,73 kA | +3,1 % | cargas como impedância constante |
 | Zbus — fluxo, sem carga | 27,58 kA | +2,6 % | tensão pré-falta do fluxo de potência |
 | Zbus — fluxo, carga Z | 28,84 kA | +7,3 % | mais realista |
-| Dinâmico PSD.jl — falta ~franca | 23,65 kA | −12,0 % | corrente já amortecida (não é o pico) |
-| Dinâmico PSD.jl — falta severa eliminável | 23,33 kA | — | — |
+| Dinâmico PSD.jl — pico subtransitório (Caso A) | 27,71 kA (6,623 pu) | **+3,1 %** | medido no 1º ciclo após a falta |
+| Dinâmico PSD.jl — corrente amortecida (Caso A) | ≈ 23,1 kA | −12 % | regime transitório (após decaimento X″d→X′d) |
 
 **Validação (ANAFAS × Zbus *flat/sem carga*):** corrente **−1,6 %**, tensões nas
 barras **0–4 %** (médio 2,1 %), contribuições dos ramos **≤ 4,1 %**, e SCC
-praticamente idêntico (632,3 vs 632,4 MVA). A soma fasorial das contribuições fecha
+praticamente idêntico (636,2 vs 632,4 MVA). A soma fasorial das contribuições fecha
 com \(I_f\) (KCL) em ambas as ferramentas. Tabelas prontas em
 [data/headquarters/latex/](data/headquarters/latex/) (`tab_corrente_falta`,
 `tab_tensoes_falta`, `tab_contribuicoes`), com erros calculados.
 
 Em todas as variantes a impedância de Thévenin sem carga é a mesma (\|Z₇₇\|=0,158),
 pois **independe** da tensão pré-falta; a corrente muda só pela tensão no ponto. As
-pequenas diferenças residuais vêm das premissas do ANAFAS (tensão pré-falta do
-`.pwf` ≈ 0,984 e inclusão de cargas/shunts), que quase se cancelam.
+pequenas diferenças residuais vêm das premissas do ANAFAS (tensão pré-falta da
+barra 7 = 0,990 pu e inclusão de cargas/shunts), que quase se cancelam.
 
-**Por que o dinâmico (PSD.jl) fica abaixo?** O método Zbus e o ANAFAS dão o **pico
-subtransitório** (superposição com \(X''_d\)); o PSD.jl integra o modelo dinâmico
-completo (com AVR), e a corrente "estabilizada" durante a falta já é amortecida —
-por isso **menor** (−12 %). É uma diferença **física esperada**, não erro: A ≈ C
-(mesma família) e B < A, com B fornecendo em troca a resposta no tempo.
+**Como o dinâmico (PSD.jl) se compara?** O método Zbus e o ANAFAS dão o **pico
+subtransitório** (superposição com \(X''_d\)). O PSD.jl integra o modelo dinâmico
+completo: medido **no 1º ciclo após a falta** (subtransitório), dá 27,71 kA —
+**+3,1 %** vs ANAFAS, em ótima concordância com o estático. A corrente então
+**decai** (\(X''_d\)→\(X'_d\), ação do AVR) para ≈ 23 kA, a corrente **amortecida**
+do regime transitório — informação física que só a simulação dinâmica fornece. Medir
+o subtransitório no instante certo é o que alinha as três abordagens (todas em
+~26–28 kA).
 
 ---
 

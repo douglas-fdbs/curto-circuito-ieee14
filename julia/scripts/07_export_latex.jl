@@ -366,8 +366,10 @@ write_txt("vetor_vfault_flat.txt", vector_to_txt(abs.(ref.Vpos), bus_order,
 ==============================================================================#
 println("\n--- Tabelas comparativas (LaTeX) ---")
 
-# Valores do PSD.jl (do script 04) para a tabela de corrente
-psid_If_kA = 23.65   # Caso A (falta quase franca, permanente) — ver 04_summary.csv
+# Valores do PSD.jl (do script 04) para a tabela de corrente.
+# Pico SUBTRANSITÓRIO do Caso A (1º ciclo após a falta) — é o valor comparável ao
+# Zbus/ANAFAS, que também são subtransitórios (X"d). Ver 04_summary.csv (If_subtr_kA).
+psid_If_kA = 27.71   # Caso A subtransitório (a corrente amortecida ~23 kA é o regime transit.)
 
 #--- Dados do relatório ANAFAS (curto trifásico franco na barra 7) — 2026-06-08 ---
 # Fonte: others/referencia_anafas/Relatorio_Anafas.txt (ANAFAS 8.1, curto trifásico).

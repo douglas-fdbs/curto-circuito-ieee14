@@ -100,9 +100,10 @@ curto na barra 7 em **quatro** variantes e exporta todas:
 Observações:
 - \(|Z_{77}|\) é **idêntico** (0,1581) entre "flat" e "fluxo" sem carga — confirma
   que a impedância de Thévenin **não** depende da tensão pré-falta. ✔
-- Para referência, a simulação dinâmica (PSD.jl, falta quase franca) dá
-  \(I_f \approx 23{,}65\) kA (5,65 pu) — **menor**, por ser a corrente já
-  amortecida pela resposta das máquinas (ver §6).
+- A simulação dinâmica (PSD.jl, falta quase franca), medida no **pico
+  subtransitório** (1º ciclo após a falta), dá \(I_f \approx 27{,}71\) kA
+  (6,62 pu) — **+3,1 %** vs ANAFAS, em ótima concordância com o estático. A
+  corrente então **decai** para ≈ 23 kA (amortecida, regime transitório). Ver §6.
 
 **Recomendação:** rode o ANAFAS na configuração **clássica** (1,0 pu, sem cargas)
 e compare-o com a variante **flat / sem carga**. Se quiser também a versão com
@@ -222,8 +223,9 @@ A concordância **A ≈ C** confirma-se (erro ≲ 2 %). A variante *flat/sem car
 mais fiel (o ANAFAS usou tensão pré-falta ≈ flat). As diferenças residuais (1–4 %)
 vêm das premissas: tensão pré-falta (barra 7 = 0,990 pu, do relatório de fluxo) e
 inclusão de cargas/shunts no ANAFAS — efeitos que quase se cancelam. O dinâmico
-(PSD.jl) fica em −12 % por dar a corrente **amortecida**, não o pico subtransitório
-(diferença física esperada).
+(PSD.jl), medido no **pico subtransitório** (1º ciclo), dá +3,1 % — alinhado ao
+estático; a corrente decai depois para ≈ 23 kA (amortecida, regime transitório),
+que era o −12 % reportado antes por medir a corrente já decaída em vez do pico.
 
 > **Rastreabilidade (reconciliação 2026-06-17):** todos os valores do ANAFAS usados
 > no script 07 foram conferidos 1:1 com os relatórios salvos. `If`, tensões e
