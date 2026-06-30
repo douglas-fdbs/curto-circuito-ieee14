@@ -219,15 +219,18 @@ superposição. Dois casos foram simulados:
 | `caso` | "A (franca, permanente)" ou "B (severa, eliminada)" |
 | `z_fault_pu` | impedância da falta aplicada |
 | `V7_min_pu` | tensão mínima atingida na barra 7 |
-| `If_pu` / `If_kA` | corrente de falta (regime dinâmico) |
+| `If_subtr_pu` / `If_subtr_kA` | corrente de falta no **pico subtransitório** (1º ciclo após a falta) |
+| `If_amort_pu` / `If_amort_kA` | corrente de falta **amortecida** (regime transitório, após o decaimento) |
 | `status` | `SIMULATION_FINALIZED` = convergiu |
 
 Leitura:
-- Caso A: V7 → 0,005 pu (quase zero), If ≈ **23,65 kA**.
-- Caso B: V7 → 0,269 pu (falta menos severa), If ≈ 23,33 kA.
-- **Por que ~23,6 kA < 27,6 kA do estático?** O valor dinâmico é a corrente já
-  com a resposta das máquinas/AVR (não o pico subtransitório instantâneo). A
-  diferença é **física e esperada**, não erro — deve ser discutida no artigo.
+- Caso A: V7 → 0,005 pu (quase zero). **Pico subtransitório ≈ 27,71 kA** (comparável
+  ao estático/ANAFAS, que usam X″d) e **amortecida ≈ 23,1 kA**.
+- Caso B: V7 → 0,269 pu (falta menos severa), subtransitória ≈ 25,11 kA.
+- **Por que medir dois valores?** A corrente de falta **decai com o tempo** (X″d → X′d,
+  ação do AVR). O método estático e o ANAFAS dão o **pico subtransitório**; medido no
+  instante certo (1º ciclo), o dinâmico bate com eles (+3,1% vs ANAFAS). A corrente
+  amortecida (~23 kA) é a do regime transitório — informação que só a simulação dá.
 
 ### `04A_tensoes_durante_falta.csv` — perfil de tensão no Caso A
 
@@ -328,8 +331,8 @@ de falta e a inércia do sistema.
 | coluna | significado |
 |---|---|
 | `time` | tempo, em s |
-| `V7_sem_fv` / `V7_com_fv` | tensão na barra 7 sem/com FV, em pu |
-| `V9_sem_fv` / `V9_com_fv` | tensão na barra 9 sem/com FV, em pu |
+| `V7_sem_fv` / `V7_com_fv` | tensão na barra 7 (de falta) sem/com FV, em pu |
+| `V4_sem_fv` / `V4_com_fv` | tensão na barra 4 (onde está a FV) sem/com FV, em pu |
 | `w_ref_sem_fv` / `w_ref_com_fv` | velocidade da máquina de referência (ω, pu) |
 
 Leitura: a FV eleva ligeiramente as tensões pré-falta (mais geração local), mas

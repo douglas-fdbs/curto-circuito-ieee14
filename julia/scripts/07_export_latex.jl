@@ -17,7 +17,7 @@
    - Cargas:            DESPREZADAS  ou  como IMPEDÂNCIA CONSTANTE.
  (ver COMPARACAO_ANAFAS.md para a metodologia.)
 
- Saídas em data/latex/*.tex e a figura data/figures/07_ybus_spy.png.
+ Saídas em data/headquarters/{latex,txt}/ e a figura data/figures/07_ybus_spy.png.
 ==============================================================================#
 
 using PowerSystems
@@ -560,7 +560,7 @@ println("\n  Corrente de base na barra ", FAULT_BUS, ": ", round(Ibase_f, digits
 println("  (variante 'flat / sem carga' = referência p/ ANAFAS clássico)")
 
 println("\n", "="^70)
-println(" Arquivos LaTeX em data/latex/ :")
+println(" Arquivos LaTeX em data/headquarters/latex/ :")
 for fn in sort(readdir(LATEX_DIR))
     println("   - ", fn)
 end

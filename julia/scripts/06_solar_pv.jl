@@ -254,10 +254,15 @@ savefig(p4, joinpath(FIG_DIR, "06_resposta_fv.png"))
 # Exportar séries e resumo (alinhando pelo menor comprimento, por segurança)
 #------------------------------------------------------------------------------
 m = min(length(base.t), length(pv.t))
-df = DataFrame(time = base.t[1:m],
-    V7_sem_fv = base.volt[FAULT_BUS][2][1:m], V7_com_fv = pv.volt[FAULT_BUS][2][1:m],
-    V9_sem_fv = base.volt[PV_BUS][2][1:m], V9_com_fv = pv.volt[PV_BUS][2][1:m],
-    w_ref_sem_fv = base.omega[REF_GEN][2][1:m], w_ref_com_fv = pv.omega[REF_GEN][2][1:m])
+# Colunas da barra da FV nomeadas dinamicamente a partir de PV_BUS (evita o erro de
+# rotular como "V9" quando a FV está na barra 4).
+df = DataFrame(time = base.t[1:m])
+df[!, :V7_sem_fv] = base.volt[FAULT_BUS][2][1:m]
+df[!, :V7_com_fv] = pv.volt[FAULT_BUS][2][1:m]
+df[!, Symbol("V$(PV_BUS)_sem_fv")] = base.volt[PV_BUS][2][1:m]
+df[!, Symbol("V$(PV_BUS)_com_fv")] = pv.volt[PV_BUS][2][1:m]
+df[!, :w_ref_sem_fv] = base.omega[REF_GEN][2][1:m]
+df[!, :w_ref_com_fv] = pv.omega[REF_GEN][2][1:m]
 CSV.write(joinpath(RESULTS_DIR, "06_pv_comparison.csv"), df)
 
 df_fv = DataFrame(time = pv_P[1], P_pu = pv_P[2], Q_pu = pv_Q[2], I_mag_pu = pv_Imag)

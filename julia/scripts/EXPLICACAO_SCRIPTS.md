@@ -707,26 +707,37 @@ volt = Dict(b => get_voltage_magnitude_series(results, b) for b in bus_order)
 - `get_voltage_magnitude_series(results, b)` devolve `(tempo, tensão)` da barra
   `b` ao longo do tempo. O `Dict(... for b in ...)` guarda isso para todas.
 
-### Extrair a corrente de falta e a janela estabilizada
+### Extrair a corrente de falta: pico subtransitório × amortecida
 
 ```julia
 t, vf = volt[fault_bus]
 t_end_fault = t_clear === nothing ? tspan[2] : t_clear
 if_mag = [(T_FAULT <= t[k] < t_end_fault) ? vf[k] * abs(Yf_shunt) : 0.0
           for k in eachindex(t)]
-settled = findall(k -> (T_FAULT + 0.03) <= t[k] < t_end_fault, eachindex(t))
-if_settled = isempty(settled) ? 0.0 : mean(if_mag[settled])
+# pico subtransitório: média do 1º ciclo após a falta (pula a amostra-lixo do
+# instante exato do chaveamento, V_pré*Y_falta)
+subtr = findall(k -> (T_FAULT + 1e-4) <= t[k] <= (T_FAULT + 0.02), eachindex(t))
+if_subtr = isempty(subtr) ? 0.0 : mean(if_mag[subtr])
+# amortecida: janela tardia, mostra o decaimento subtransitório->transitório
+settled = findall(k -> (T_FAULT + 0.30) <= t[k] <= (t_end_fault - 0.05), eachindex(t))
+if_settled = isempty(settled) ? if_subtr : mean(if_mag[settled])
 ```
 
 - `t, vf = volt[fault_bus]` **desempacota** a tupla (tempo, tensão).
 - A corrente de falta no nó é `|I| = |V|·|Y_shunt|` (KCL no nó), só durante a
   janela da falta (o ternário zera fora dela).
-- `eachindex(t)` dá os índices válidos do vetor.
 - `findall(predicado, coleção)` devolve os **índices** onde o predicado é
-  verdadeiro. Aqui, `k -> ...` é uma **função anônima** (lambda) que testa se o
-  tempo está na janela "já estabilizada" (após 30 ms da falta).
-- `mean(if_mag[settled])` (do pacote `Statistics`) tira a média da corrente nessa
-  janela — valor representativo, sem o ruído do transitório inicial.
+  verdadeiro. `k -> ...` é uma **função anônima** (lambda).
+- **Dois pontos de medição, e o porquê:** a corrente de falta **decai com o tempo**
+  (a reatância efetiva sobe de X″d para X′d). O `if_subtr` mede o **pico
+  subtransitório** (1º ciclo após a falta) — é o valor comparável ao método estático
+  Zbus e ao ANAFAS, que também usam X″d. O `if_settled` mede a corrente **amortecida**
+  do regime transitório (janela tardia). Medir cedo (subtransitório) é o que alinha o
+  dinâmico com o estático (~27 kA); medir tarde dá a corrente já decaída (~23 kA).
+- A janela do `subtr` começa em `T_FAULT + 1e-4` de propósito: pula a amostra do
+  **instante exato do chaveamento**, em que `if_mag = V_pré · |Y_falta|` é lixo
+  numérico (a tensão ainda não colapsou). `mean(if_mag[...])` (de `Statistics`) tira a
+  média na janela.
 
 ### O restante: gráficos e exportação
 
