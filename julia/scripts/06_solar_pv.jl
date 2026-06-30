@@ -2,8 +2,10 @@
  Script 06 - Impacto de geração solar fotovoltaica no curto-circuito da barra 7
  ------------------------------------------------------------------------------
  Conecta uma usina solar FV de tamanho considerável (RenewableDispatch + inversor
- dinâmico grid-following) na barra 9 (adjacente à barra de falta 7) e compara a
- resposta dinâmica do sistema a um curto trifásico na barra 7, COM e SEM a FV.
+ dinâmico grid-following) na barra 4 (69 kV, ligada à barra de falta 7 pelo trafo
+ 4-7) e compara a resposta dinâmica a um curto trifásico na barra 7, COM e SEM a FV.
+ (A barra 4, de 69 kV, sofre menos afundamento que uma barra adjacente em 13,8 kV,
+ evitando que o PLL do inversor perca o sincronismo e o solver divirja.)
 
  A geração baseada em inversor (IBR) contribui com corrente de falta LIMITADA
  (≈ corrente nominal), ao contrário das máquinas síncronas (corrente subtransitória
