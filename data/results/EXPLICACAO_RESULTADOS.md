@@ -239,8 +239,9 @@ Leitura:
 | `bus` | barra |
 | `V_durante_pu` | tensão durante a falta permanente, em pu |
 
-É o "retrato" do afundamento (análogo a `VA_pu` do estático). Barra 7 = 0,0057 pu.
-Compare com `03_fault_voltages.csv` — os perfis batem bem (valida estático × dinâmico).
+É o "retrato" do afundamento (análogo a `VA_pu` do estático), medido na janela
+subtransitória. Barra 7 ≈ 0,007 pu (quase zero). Compare com `03_fault_voltages.csv`
+— os perfis batem bem (valida estático × dinâmico).
 
 ### `04B_dynamic_voltages.csv` — tensões ao longo do tempo (Caso B)
 
